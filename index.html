@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beacon Math Practice Portal</title>
+<meta name="description" content="Interactive mathematics practice for Beacon of Hope Christian School.">
+<style>
+:root{
+  --navy:#151a56;
+  --royal:#2312d9;
+  --royal2:#3326ee;
+  --red:#a71930;
+  --gold:#e5b84a;
+  --ink:#1f2937;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --page:#f5f7fc;
+  --white:#fff;
+  --green:#16803d;
+  --green-bg:#ecfdf3;
+  --danger:#b91c1c;
+  --danger-bg:#fef2f2;
+  --amber:#b45309;
+  --amber-bg:#fff7ed;
+  --shadow:0 18px 48px rgba(23,32,84,.09);
+  --shadow-sm:0 8px 25px rgba(23,32,84,.07);
+  --radius:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(35,18,217,.09),transparent 30rem),
+    linear-gradient(180deg,#fbfcff,var(--page));
+  color:var(--ink);
+  line-height:1.55;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.container{max-width:1180px;margin:auto;padding:0 22px}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(226,232,240,.9);
+}
+.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:52px;height:52px;border-radius:50%;
+  object-fit:cover;border:2px solid #d9d9ef;background:#fff;
+}
+.brand strong{display:block;color:var(--navy);font-size:1rem}
+.brand span{display:block;color:var(--muted);font-size:.77rem;font-weight:600}
+.nav-badge{
+  background:#fff7f7;color:var(--red);border:1px solid #f5d4da;
+  padding:8px 12px;border-radius:999px;font-size:.8rem;font-weight:800;
+}
+.hero{padding:60px 0 38px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:38px;align-items:center}
+.eyebrow{
+  display:inline-flex;gap:8px;align-items:center;padding:7px 11px;
+  border-radius:999px;background:#eeeefe;color:var(--royal);
+  font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;
+}
+.hero h1{margin:17px 0 15px;color:var(--navy);font-size:clamp(2.5rem,5vw,4.5rem);line-height:1.02;letter-spacing:-.045em}
+.hero h1 span{color:var(--royal)}
+.hero p{margin:0;max-width:700px;color:var(--muted);font-size:1.08rem}
+.hero-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:23px}
+.pill{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);padding:9px 12px;border-radius:999px;font-weight:750;font-size:.88rem}
+.pill:before{content:"✓";color:var(--green);margin-right:7px}
+.school-card{
+  color:#fff;padding:28px;border-radius:28px;position:relative;overflow:hidden;
+  background:linear-gradient(145deg,var(--navy),var(--royal));
+  box-shadow:0 24px 60px rgba(21,26,86,.22);
+}
+.school-card:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08);right:-85px;top:-90px}
+.school-card img{width:88px;height:88px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,.9);background:#fff}
+.school-card h3{margin:15px 0 3px;font-size:1.35rem}
+.school-card p{color:#dbe2ff;font-size:.91rem}
+.school-card .verse{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.2);font-style:italic;color:#fff}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:25px 0 16px}
+.section-head h2{margin:0;color:var(--navy);font-size:1.7rem}
+.section-head p{margin:5px 0 0;color:var(--muted)}
+.units{display:grid;gap:16px;margin-bottom:46px}
+.unit{
+  background:#fff;border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow-sm);overflow:hidden
+}
+.unit-header{
+  width:100%;border:0;background:#fff;padding:20px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  cursor:pointer;text-align:left
+}
+.unit-header:hover{background:#fbfcff}
+.unit-title-wrap{display:flex;align-items:center;gap:14px}
+.unit-badge{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--royal2),var(--royal));color:#fff;
+  font-weight:900;box-shadow:0 8px 20px rgba(35,18,217,.16)
+}
+.unit-header h3{margin:0;color:var(--navy);font-size:1.13rem}
+.unit-header p{margin:3px 0 0;color:var(--muted);font-size:.84rem}
+.unit-arrow{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:#f1f3ff;color:var(--royal);font-size:1.1rem;font-weight:900;
+  transition:transform .2s ease
+}
+.unit.open .unit-arrow{transform:rotate(180deg)}
+.unit-content{
+  display:none;padding:0 18px 20px;border-top:1px solid var(--line);
+  background:#fcfcff
+}
+.unit.open .unit-content{display:block}
+.topics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-top:18px}
+.topic{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;
+  box-shadow:var(--shadow-sm);cursor:pointer;transition:.18s ease;position:relative;overflow:hidden;
+}
+.topic:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#c7cff5}
+.topic.active{border-color:var(--royal);box-shadow:0 0 0 3px rgba(35,18,217,.09),var(--shadow)}
+.topic-icon{width:45px;height:45px;border-radius:13px;display:grid;place-items:center;background:#eeeeff;color:var(--royal);font-weight:900;margin-bottom:14px}
+.topic h3{margin:0 0 6px;color:var(--navy);font-size:1.04rem}
+.topic p{margin:0;color:var(--muted);font-size:.86rem}
+.practice-shell{display:grid;grid-template-columns:310px 1fr;gap:24px;align-items:start;margin-bottom:56px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.settings{padding:22px;position:sticky;top:96px}
+.settings h3{margin:0;color:var(--navy)}
+.settings .sub{margin:5px 0 19px;color:var(--muted);font-size:.88rem}
+.field{margin-bottom:14px}
+.field label{display:block;margin-bottom:6px;color:#374151;font-size:.82rem;font-weight:800}
+.field input,.field select{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:11px;background:#fff}
+.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:850;transition:.18s}
+.btn-primary{color:#fff;background:linear-gradient(135deg,var(--royal2),var(--royal));box-shadow:0 10px 24px rgba(35,18,217,.2)}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-secondary{background:#eef2f7;color:#334155}
+.btn-outline{background:#fff;color:var(--royal);border:1px solid #cbd0ff}
+.full{width:100%}
+.progress-wrap{padding-top:17px;margin-top:18px;border-top:1px solid var(--line)}
+.progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-bottom:7px}
+.progress{height:9px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--royal),#5e7cf5);transition:.2s}
+.notice{display:none;margin-top:12px;background:var(--amber-bg);color:var(--amber);border:1px solid #fed7aa;border-radius:10px;padding:10px;font-size:.84rem;font-weight:700}
+.practice-title{margin:0 0 13px}
+.practice-title h2{margin:0;color:var(--navy);font-size:1.4rem}
+.practice-title p{margin:4px 0 0;color:var(--muted);font-size:.88rem}
+.empty{background:rgba(255,255,255,.78);border:1px dashed #cbd5e1;border-radius:18px;padding:34px;text-align:center;color:var(--muted)}
+.empty-icon{width:54px;height:54px;border-radius:15px;margin:0 auto 12px;background:#eeeefe;color:var(--royal);display:grid;place-items:center;font-size:1.3rem;font-weight:900}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px}
+.qnum{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;font-weight:900}
+.qtag{font-size:.72rem;color:var(--royal);background:#eeeeff;border:1px solid #dad9ff;border-radius:999px;padding:5px 9px;font-weight:850}
+.qcard h3{margin:0 0 15px;color:var(--navy);font-size:1.05rem}
+.option{display:flex;align-items:flex-start;gap:10px;margin:8px 0;border:1px solid #dbe2ea;border-radius:12px;padding:11px 12px;background:#fff;transition:.15s}
+.option:hover{background:#fafbff;border-color:#aeb7f5}
+.option input{margin-top:4px;accent-color:var(--royal)}
+.letter{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;background:#f1f5f9;color:#475569;font-weight:900;font-size:.78rem;flex:0 0 27px}
+.quiz-actions{display:none;position:sticky;bottom:16px;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid var(--line);box-shadow:0 16px 38px rgba(15,23,42,.13);border-radius:15px;padding:11px;gap:9px;justify-content:flex-end}
+.results{display:none;padding:23px;margin:21px 0}
+.results h2{margin:0;color:var(--navy)}
+.result-name{color:var(--muted);margin:5px 0 15px}
+.scoreband{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.scorebox{padding:16px;background:#f3f4ff;border:1px solid #dbdcff;border-radius:14px}
+.scorebox span{display:block;color:#64748b;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:850}
+.scorebox strong{display:block;color:var(--royal);font-size:2rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:13px 0}
+.stat{padding:12px;text-align:center;border:1px solid var(--line);border-radius:12px;background:#fff}
+.stat strong{display:block;font-size:1.25rem;color:var(--navy)}
+.stat span{font-size:.76rem;color:var(--muted)}
+.feedback{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:12px;color:#475569}
+.result-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+#solutions{display:none;margin-top:26px}
+.solcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:13px;box-shadow:var(--shadow-sm)}
+.solcard.correct{border-left:5px solid #22c55e}
+.solcard.wrong{border-left:5px solid #ef4444}
+.answerline{padding:9px 11px;border-radius:9px;margin:7px 0;font-size:.9rem}
+.answerline.correct{background:var(--green-bg);color:var(--green)}
+.answerline.wrong{background:var(--danger-bg);color:var(--danger)}
+.worked{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:13px;margin-top:9px;color:#334155}
+.footer{margin-top:38px;background:var(--navy);color:#dce3ff;padding:30px 0}
+.footer-grid{display:grid;grid-template-columns:1fr auto;gap:25px;align-items:center}
+.footer-brand{display:flex;align-items:center;gap:12px}
+.footer-brand img{width:55px;height:55px;border-radius:50%;object-fit:cover;background:#fff}
+.footer strong{color:#fff}
+.credit{text-align:right;font-size:.84rem}
+.credit b{display:block;color:#fff;font-size:.92rem}
+@media(max-width:900px){
+ .hero-grid,.practice-shell{grid-template-columns:1fr}
+ .topics{grid-template-columns:repeat(2,1fr)}
+ .settings{position:static}
+}
+@media(max-width:620px){
+ .container{padding:0 15px}
+ .hero{padding:42px 0 26px}
+ .hero h1{font-size:2.6rem}
+ .topics{grid-template-columns:1fr}
+ .nav-badge{display:none}
+ .scoreband,.stats{grid-template-columns:1fr}
+ .footer-grid{grid-template-columns:1fr}
+ .credit{text-align:left}
+ .quiz-actions .btn{flex:1}
+}
+@media print{
+ .topbar,.hero,.topics,.settings,.quiz-actions,.footer,#quizContainer,.section-head{display:none!important}
+ #solutions,.results{display:block!important}
+ body{background:#fff}
+ .solcard,.results{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <div class="brand">
+      <img class="logo school-logo" alt="Beacon of Hope Christian School logo">
+      <div>
+        <strong>Beacon Math Practice Portal</strong>
+        <span>Beacon of Hope Christian School</span>
+      </div>
+    </div>
+    <div class="nav-badge">Christ-Centered Education</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">Student Mathematics Center</div>
+      <h1>Practice. Understand. <span>Grow.</span></h1>
+      <p>Strengthen your mathematics skills through focused practice, immediate grading, and detailed worked solutions. Choose a topic, select your level, and learn from every attempt.</p>
+      <div class="hero-pills">
+        <div class="pill">Instant feedback</div>
+        <div class="pill">Step-by-step solutions</div>
+        <div class="pill">Fresh practice sets</div>
+      </div>
+    </div>
+    <div class="school-card">
+      <img class="school-logo" alt="Beacon of Hope Christian School logo">
+      <h3>Beacon of Hope Christian School</h3>
+      <p>Mathematics Practice Center</p>
+      <div class="verse">“Whatever you do, work at it with all your heart.” — Colossians 3:23</div>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+  <div class="section-head">
+    <div>
+      <h2>Mathematics Units</h2>
+      <p>Open a unit to view its lessons and choose a practice topic.</p>
+    </div>
+  </div>
+
+  <section class="units" id="units"></section>
+
+  <div class="section-head">
+    <div>
+      <h2>Practice Workspace</h2>
+      <p>Customize your session and work through each question carefully.</p>
+    </div>
+  </div>
+
+  <section class="practice-shell">
+    <aside class="panel settings">
+      <h3>Practice Settings</h3>
+      <div class="sub" id="selectedTopicLabel">Select a topic above.</div>
+
+      <div class="field">
+        <label for="studentName">Student Name</label>
+        <input id="studentName" type="text" placeholder="Enter your name">
+      </div>
+
+      <div class="field">
+        <label for="quizSize">Number of Questions</label>
+        <select id="quizSize">
+          <option value="5">5 questions</option>
+          <option value="10" selected>10 questions</option>
+          <option value="15">15 questions</option>
+          <option value="20">20 questions</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="Foundation">Foundation</option>
+          <option value="Intermediate" selected>Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <button type="button" class="btn btn-primary full" id="startBtn">Start Practice</button>
+
+      <div class="progress-wrap">
+        <div class="progress-meta"><span>Progress</span><span id="progressPct">0%</span></div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div class="notice" id="notice"></div>
+      </div>
+    </aside>
+
+    <div>
+      <div class="practice-title">
+        <h2 id="workspaceTitle">Ready to practice?</h2>
+        <p id="progressText">Choose a topic and select Start Practice.</p>
+      </div>
+
+      <div class="empty" id="emptyState">
+        <div class="empty-icon">∑</div>
+        <strong>Your practice questions will appear here.</strong>
+        <div>Select a topic from the dashboard and begin when you are ready.</div>
+      </div>
+
+      <form id="quizForm">
+        <div id="quizContainer"></div>
+        <div class="quiz-actions" id="quizActions">
+          <button type="button" class="btn btn-secondary" id="clearBtn">Clear Answers</button>
+          <button type="button" class="btn btn-primary" id="submitBtn">Submit Practice</button>
+        </div>
+      </form>
+
+      <section class="panel results" id="results">
+        <h2>Practice Results</h2>
+        <div class="result-name" id="resultName"></div>
+        <div class="scoreband">
+          <div class="scorebox"><span>Score</span><strong id="scoreText">0 / 0</strong></div>
+          <div class="scorebox"><span>Grade</span><strong id="gradeText">0%</strong></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong id="correctCount">0</strong><span>Correct</span></div>
+          <div class="stat"><strong id="incorrectCount">0</strong><span>Incorrect</span></div>
+          <div class="stat"><strong id="attemptedCount">0</strong><span>Attempted</span></div>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <div class="result-actions">
+          <button type="button" class="btn btn-primary" id="solutionsBtn">View Detailed Solutions</button>
+          <button type="button" class="btn btn-outline" id="againBtn">Practice Again</button>
+        </div>
+      </section>
+
+      <section id="solutions">
+        <div class="practice-title">
+          <h2>Detailed Solutions</h2>
+          <p>Compare each solution with your work and identify the step that matters most.</p>
+        </div>
+        <div id="solutionsContainer"></div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img class="school-logo" alt="Beacon of Hope Christian School logo">
+      <div><strong>Beacon of Hope Christian School</strong><br>Mathematics Practice Portal</div>
+    </div>
+    <div class="credit">
+      <b>Created by Terrence Kudakwashe Madanhi</b>
+      Mathematics Teacher • Beacon of Hope Christian School
+    </div>
+  </div>
+</footer>
+
+<script>
+const LOGO_URL = "https://static.wixstatic.com/media/c1e8bd_704518ae93674b359e955a0635c6d2ac~mv2.jpg/v1/fill/w_491%2Ch_491%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/c1e8bd_704518ae93674b359e955a0635c6d2ac~mv2.jpg";
+document.querySelectorAll(".school-logo").forEach(img => img.src = LOGO_URL);
+
+const UNITS = [
+ {
+   id:"unit1",
+   title:"Unit 1",
+   subtitle:"Modeling Problems with Rational Numbers",
+   open:true,
+   topics:[
+     {id:"prime", icon:"PF", title:"Prime Factorization", desc:"Prime numbers, factor trees, and exponential notation."},
+     {id:"gcf", icon:"GCF", title:"Greatest Common Factor", desc:"Find common factors and solve GCF problems."},
+     {id:"simplify", icon:"½", title:"Simplifying Fractions", desc:"Reduce fractions to simplest form using common factors."},
+     {id:"lcm", icon:"LCM", title:"LCM & LCD", desc:"Find least common multiples and common denominators."},
+     {id:"fractions", icon:"⅔", title:"Fraction Operations", desc:"Add, subtract, multiply, and divide fractions."},
+     {id:"decimals", icon:".25", title:"Decimal Operations", desc:"Add, subtract, multiply, and divide decimals."},
+     {id:"rational", icon:"ℝ", title:"Rational & Irrational Numbers", desc:"Classify numbers and understand their decimal forms."}
+   ]
+ }
+];
+
+const TOPICS = UNITS.flatMap(unit => unit.topics);
+
+let selectedTopic = "prime";
+let activeQuestions = [];
+let submittedResponses = [];
+
+function gcd(a,b){ while(b){[a,b]=[b,a%b]} return Math.abs(a); }
+function lcm(a,b){ return Math.abs(a*b)/gcd(a,b); }
+function isPrime(n){
+ if(n<2)return false;
+ for(let i=2;i*i<=n;i++) if(n%i===0)return false;
+ return true;
+}
+function primeFactors(n){
+ let x=n, d=2, arr=[];
+ while(d*d<=x){
+   while(x%d===0){arr.push(d);x/=d}
+   d++;
+ }
+ if(x>1)arr.push(x);
+ return arr;
+}
+function factorHTML(arr){
+ const c={}; arr.forEach(x=>c[x]=(c[x]||0)+1);
+ return Object.keys(c).map(p=>c[p]===1?p:`${p}<sup>${c[p]}</sup>`).join(" × ");
+}
+function shuffle(a){
+ a=a.slice();
+ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+ return a;
+}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function choice(a){return a[rand(0,a.length-1)]}
+function frac(n,d){const g=gcd(Math.abs(n),Math.abs(d)); n/=g;d/=g; if(d<0){n=-n;d=-d} return [n,d]}
+function fracText(n,d){const r=frac(n,d);return r[1]===1?String(r[0]):`${r[0]}/${r[1]}`}
+function moneyOrNum(x){return Number(x.toFixed(2)).toString()}
+function uniqueOptions(correct, distractors){
+ const out=[String(correct)];
+ for(const d of distractors){
+   const s=String(d);
+   if(!out.includes(s)) out.push(s);
+   if(out.length===4)break;
+ }
+ let bump=1;
+ while(out.length<4){
+   let x = typeof correct==="number" ? correct+bump : String(correct)+" "+bump;
+   if(!out.includes(String(x)))out.push(String(x));
+   bump++;
+ }
+ return shuffle(out);
+}
+function makeQuestion(prompt, correct, distractors, solution, tag){
+ const options=uniqueOptions(correct,distractors);
+ return {prompt,options,answer:options.indexOf(String(correct)),solution,tag};
+}
+
+function genPrime(diff){
+ const max=diff==="Foundation"?100:diff==="Intermediate"?500:2500;
+ let n;
+ do{n=rand(diff==="Foundation"?12:40,max)}while(isPrime(n));
+ const pf=primeFactors(n), correct=factorHTML(pf);
+ const pair=pf[0]+" × "+(n/pf[0]);
+ const wrong1=pf.length>1?factorHTML(pf.slice(0,-1)):String(n);
+ const wrong2=String(n);
+ const q=makeQuestion(`What is the complete prime factorization of <strong>${n}</strong>?`,correct,[pair,wrong1,wrong2],
+ `Divide ${n} repeatedly by prime numbers.<br>Prime factors: ${pf.join(" × ")}.<br>Therefore, <strong>${n} = ${correct}</strong>.`,"Prime Factorization");
+ return q;
+}
+function genGCF(diff){
+ const max=diff==="Foundation"?40:diff==="Intermediate"?120:300;
+ let common=choice([2,3,4,5,6,7,8,9,10,12]);
+ let a=common*rand(2,Math.max(3,Math.floor(max/common)));
+ let b=common*rand(2,Math.max(3,Math.floor(max/common)));
+ const g=gcd(a,b);
+ const divisors=[1,2,3,4,5,6,8,10,12,15].filter(x=>x!==g);
+ return makeQuestion(`What is the greatest common factor (GCF) of <strong>${a}</strong> and <strong>${b}</strong>?`,g,
+ [choice(divisors),Math.min(a,b),Math.max(1,g*2)],
+ `Factors common to ${a} and ${b} include all divisors of ${g}. The greatest one is <strong>${g}</strong>.<br>Therefore, GCF(${a}, ${b}) = <strong>${g}</strong>.`,"GCF");
+}
+function genSimplify(diff){
+ const maxBase=diff==="Foundation"?12:diff==="Intermediate"?25:60;
+ let n=rand(1,maxBase), d=rand(n+1,maxBase+10);
+ let g0=gcd(n,d);
+ if(g0!==1){n/=g0;d/=g0}
+ const k=rand(2,diff==="Advanced"?12:8);
+ const N=n*k,D=d*k, correct=`${n}/${d}`;
+ return makeQuestion(`Simplify <strong>${N}/${D}</strong> to lowest terms.`,correct,
+ [`${N}/${D}`,`${Math.max(1,n)}/${D/k+1}`,`${N/k}/${D}`],
+ `The GCF of ${N} and ${D} is ${k}. Divide numerator and denominator by ${k}:<br>${N} ÷ ${k} = ${n}<br>${D} ÷ ${k} = ${d}<br>So <strong>${N}/${D} = ${correct}</strong>.`,"Simplifying Fractions");
+}
+function genLCM(diff){
+ const max=diff==="Foundation"?12:diff==="Intermediate"?25:50;
+ let a=rand(2,max), b=rand(2,max), L=lcm(a,b);
+ const askLCD=Math.random()<.5;
+ const prompt=askLCD?`What is the least common denominator (LCD) for fractions with denominators <strong>${a}</strong> and <strong>${b}</strong>?`:
+ `What is the least common multiple (LCM) of <strong>${a}</strong> and <strong>${b}</strong>?`;
+ return makeQuestion(prompt,L,[a*b,gcd(a,b),Math.max(a,b)],
+ `The least positive number divisible by both ${a} and ${b} is <strong>${L}</strong>.${askLCD?" The LCD is the LCM of the denominators.":""}`,"LCM & LCD");
+}
+function genFractions(diff){
+ const ops=diff==="Foundation"?["+","−"]:["+", "−", "×", "÷"];
+ const op=choice(ops);
+ let a=rand(1,diff==="Advanced"?12:8), b=rand(a+1,diff==="Advanced"?16:12);
+ let c=rand(1,diff==="Advanced"?12:8), d=rand(c+1,diff==="Advanced"?16:12);
+ let n,dn,steps;
+ if(op==="+"){n=a*d+c*b;dn=b*d;steps=`Find a common denominator: ${b} × ${d} = ${b*d}.<br>${a}/${b} = ${a*d}/${b*d} and ${c}/${d} = ${c*b}/${b*d}.<br>Add the numerators.`}
+ if(op==="−"){
+   if(a/b<c/d){[a,c]=[c,a];[b,d]=[d,b]}
+   n=a*d-c*b;dn=b*d;steps=`Use a common denominator of ${b*d}.<br>${a}/${b} = ${a*d}/${b*d} and ${c}/${d} = ${c*b}/${b*d}.<br>Subtract the numerators.`;
+ }
+ if(op==="×"){n=a*c;dn=b*d;steps=`Multiply numerators and denominators: (${a} × ${c}) / (${b} × ${d}) = ${n}/${dn}.`}
+ if(op==="÷"){n=a*d;dn=b*c;steps=`Multiply by the reciprocal: ${a}/${b} ÷ ${c}/${d} = ${a}/${b} × ${d}/${c} = ${n}/${dn}.`}
+ const r=frac(n,dn), correct=fracText(n,dn);
+ return makeQuestion(`Calculate and simplify: <strong>${a}/${b} ${op} ${c}/${d}</strong>`,correct,
+ [fracText(n+1,dn),fracText(Math.abs(a+(op==="−"?-c:c)),Math.max(1,b+d)),fracText(n,dn+1)],
+ `${steps}<br>Simplify the result to obtain <strong>${correct}</strong>.`,"Fraction Operations");
+}
+function genDecimals(diff){
+ const ops=diff==="Foundation"?["+","−"]:["+", "−","×","÷"];
+ const op=choice(ops);
+ let a,b,correct,sol,distr=[];
+ if(op==="+"||op==="−"){
+   a=rand(10,999)/100;b=rand(10,999)/100;
+   if(op==="−"&&b>a)[a,b]=[b,a];
+   correct=moneyOrNum(op==="+"?a+b:a-b);
+   sol=`Align the decimal points and ${op==="+"?"add":"subtract"}: <strong>${a.toFixed(2)} ${op} ${b.toFixed(2)} = ${correct}</strong>.`;
+   distract=[moneyOrNum(Number(correct)+0.1),moneyOrNum(Math.abs(a-b)),moneyOrNum(Number(correct)+1)];
+ }else if(op==="×"){
+   a=rand(11,diff==="Advanced"?999:199)/10;b=rand(2,99)/10;
+   correct=moneyOrNum(a*b);
+   sol=`Multiply as whole numbers, then place the decimal according to the total number of decimal places.<br><strong>${a} × ${b} = ${correct}</strong>.`;
+   distract=[moneyOrNum(a+b),moneyOrNum(a*b*10),moneyOrNum(a*b/10)];
+ }else{
+   let divisor=rand(2,20)/10, quotient=rand(2,diff==="Advanced"?100:30);
+   a=Number((divisor*quotient).toFixed(2));b=divisor;correct=moneyOrNum(quotient);
+   sol=`Move the decimal equally in the dividend and divisor until the divisor is a whole number, then divide.<br><strong>${a} ÷ ${b} = ${correct}</strong>.`;
+   distract=[moneyOrNum(a/b/10),moneyOrNum(a/b*10),moneyOrNum(a-b)];
+ }
+ return makeQuestion(`Calculate: <strong>${a} ${op} ${b}</strong>`,correct,distract,sol,"Decimal Operations");
+}
+function genRational(diff){
+ const cases=[
+   {v:"0.75",type:"Rational",why:"0.75 is a terminating decimal, so it can be written as 3/4."},
+   {v:"0.333...",type:"Rational",why:"A repeating decimal is rational because it can be written as a fraction."},
+   {v:"√9",type:"Rational",why:"√9 = 3, which is an integer and therefore rational."},
+   {v:"√11",type:"Irrational",why:"11 is not a perfect square, so √11 is nonterminating and nonrepeating."},
+   {v:"π",type:"Irrational",why:"π cannot be written as a ratio of two integers."},
+   {v:"7/12",type:"Rational",why:"7/12 is already a ratio of integers."},
+   {v:"√25",type:"Rational",why:"√25 = 5, an integer."},
+   {v:"√7",type:"Irrational",why:"7 is not a perfect square, so √7 is irrational."}
+ ];
+ const x=choice(cases);
+ if(diff==="Foundation"){
+  return makeQuestion(`Classify <strong>${x.v}</strong>.`,x.type,
+   [x.type==="Rational"?"Irrational":"Rational","Whole number only","Prime number"],
+   `${x.why}<br>Therefore, <strong>${x.v}</strong> is <strong>${x.type.toLowerCase()}</strong>.`,"Rational & Irrational");
+ }
+ const set=shuffle(cases).slice(0,4);
+ const irr=set.filter(z=>z.type==="Irrational");
+ if(irr.length===0)set[0]=cases[3];
+ const rational=set.filter(z=>z.type==="Rational");
+ if(rational.length===0)set[0]=cases[0];
+ const target=choice(["Rational","Irrational"]);
+ let valid=set.filter(z=>z.type===target);
+ if(valid.length!==1){
+   const chosen=choice(cases.filter(z=>z.type===target));
+   const others=shuffle(cases.filter(z=>z.type!==target)).slice(0,3);
+   set.splice(0,set.length,chosen,...others);
+ }
+ const correctObj=set.find(z=>z.type===target);
+ return makeQuestion(`Which of the following numbers is <strong>${target.toLowerCase()}</strong>?`,correctObj.v,
+   set.filter(z=>z.v!==correctObj.v).map(z=>z.v),
+   `${correctObj.why}<br>Therefore, <strong>${correctObj.v}</strong> is ${target.toLowerCase()}.`,"Rational & Irrational");
+}
+
+const generators={prime:genPrime,gcf:genGCF,simplify:genSimplify,lcm:genLCM,fractions:genFractions,decimals:genDecimals,rational:genRational};
+
+function renderUnits(){
+ const holder=document.getElementById("units");
+ holder.innerHTML="";
+ UNITS.forEach(unit=>{
+   const section=document.createElement("section");
+   section.className="unit"+(unit.open?" open":"");
+   section.dataset.unitId=unit.id;
+
+   const header=document.createElement("button");
+   header.type="button";
+   header.className="unit-header";
+   header.innerHTML=`
+     <div class="unit-title-wrap">
+       <div class="unit-badge">${unit.title.replace("Unit ","U")}</div>
+       <div>
+         <h3>${unit.title}: ${unit.subtitle}</h3>
+         <p>${unit.topics.length} lessons available</p>
+       </div>
+     </div>
+     <div class="unit-arrow">⌄</div>
+   `;
+   header.addEventListener("click",()=>{
+     unit.open=!unit.open;
+     renderUnits();
+   });
+
+   const content=document.createElement("div");
+   content.className="unit-content";
+
+   const topicsGrid=document.createElement("div");
+   topicsGrid.className="topics";
+
+   unit.topics.forEach(t=>{
+     const card=document.createElement("article");
+     card.className="topic"+(t.id===selectedTopic?" active":"");
+     card.innerHTML=`<div class="topic-icon">${t.icon}</div><h3>${t.title}</h3><p>${t.desc}</p>`;
+     card.onclick=()=>selectTopic(t.id);
+     topicsGrid.appendChild(card);
+   });
+
+   content.appendChild(topicsGrid);
+   section.appendChild(header);
+   section.appendChild(content);
+   holder.appendChild(section);
+ });
+}
+function selectTopic(id){
+ selectedTopic=id;
+ const t=TOPICS.find(x=>x.id===id);
+ document.getElementById("selectedTopicLabel").textContent=t.title;
+ document.getElementById("workspaceTitle").textContent=t.title+" Practice";
+ renderUnits();
+ document.querySelector(".practice-shell").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function startQuiz(){
+ const t=TOPICS.find(x=>x.id===selectedTopic);
+ const size=Number(document.getElementById("quizSize").value);
+ const diff=document.getElementById("difficulty").value;
+ activeQuestions=[];
+ for(let i=0;i<size;i++)activeQuestions.push(generators[selectedTopic](diff));
+ submittedResponses=[];
+ const holder=document.getElementById("quizContainer");holder.innerHTML="";
+ activeQuestions.forEach((q,i)=>{
+   const card=document.createElement("div");card.className="qcard";
+   card.innerHTML=`<div class="qtop"><div class="qnum">Question ${i+1}</div><div class="qtag">${q.tag}</div></div>
+   <h3>${q.prompt}</h3>
+   ${q.options.map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"><span class="letter">${String.fromCharCode(65+j)}</span><span>${o}</span></label>`).join("")}`;
+   holder.appendChild(card);
+ });
+ document.querySelectorAll('input[type="radio"]').forEach(x=>x.addEventListener("change",updateProgress));
+ document.getElementById("emptyState").style.display="none";
+ document.getElementById("quizActions").style.display="flex";
+ document.getElementById("results").style.display="none";
+ document.getElementById("solutions").style.display="none";
+ document.getElementById("notice").style.display="none";
+ document.getElementById("workspaceTitle").textContent=t.title+" Practice";
+ updateProgress();
+ holder.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function updateProgress(){
+ if(!activeQuestions.length){document.getElementById("progressPct").textContent="0%";document.getElementById("progressBar").style.width="0%";return}
+ let a=0;activeQuestions.forEach((_,i)=>{if(document.querySelector(`input[name=q${i}]:checked`))a++});
+ const p=Math.round(a/activeQuestions.length*100);
+ document.getElementById("progressPct").textContent=p+"%";document.getElementById("progressBar").style.width=p+"%";
+ document.getElementById("progressText").textContent=`${a} of ${activeQuestions.length} questions answered`;
+}
+function submitQuiz(){
+ let correct=0, unanswered=0;submittedResponses=[];
+ activeQuestions.forEach((q,i)=>{
+  const s=document.querySelector(`input[name=q${i}]:checked`);
+  if(!s){unanswered++;submittedResponses.push(null)}else{const v=Number(s.value);submittedResponses.push(v);if(v===q.answer)correct++}
+ });
+ if(unanswered){
+   const n=document.getElementById("notice");n.style.display="block";n.textContent=`Please answer all questions before submitting. ${unanswered} remaining.`;
+   n.scrollIntoView({behavior:"smooth",block:"center"});return;
+ }
+ document.getElementById("notice").style.display="none";
+ const pct=Math.round(correct/activeQuestions.length*100),name=document.getElementById("studentName").value.trim();
+ document.getElementById("resultName").textContent=name?`${name}, here is your practice summary.`:"Here is your practice summary.";
+ document.getElementById("scoreText").textContent=`${correct} / ${activeQuestions.length}`;
+ document.getElementById("gradeText").textContent=pct+"%";
+ document.getElementById("correctCount").textContent=correct;
+ document.getElementById("incorrectCount").textContent=activeQuestions.length-correct;
+ document.getElementById("attemptedCount").textContent=activeQuestions.length;
+ document.getElementById("feedback").textContent=pct>=90?"Excellent work. You demonstrated strong mastery of this topic.":pct>=80?"Good work. Review the missed questions, then try another set.":pct>=70?"You are making progress. Study the worked solutions before practicing again.":"Keep working. Review the detailed solutions carefully and focus on one step at a time.";
+ renderSolutions();
+ document.getElementById("results").style.display="block";
+ document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderSolutions(){
+ const h=document.getElementById("solutionsContainer");h.innerHTML="";
+ activeQuestions.forEach((q,i)=>{
+   const r=submittedResponses[i],ok=r===q.answer;
+   const your=r===null?"No answer":`${String.fromCharCode(65+r)}. ${q.options[r]}`;
+   const good=`${String.fromCharCode(65+q.answer)}. ${q.options[q.answer]}`;
+   const c=document.createElement("div");c.className=`solcard ${ok?"correct":"wrong"}`;
+   c.innerHTML=`<div class="qtop"><div class="qnum">Question ${i+1}</div><div class="qtag">${q.tag}</div></div>
+   <h3>${q.prompt}</h3>
+   <div class="answerline ${ok?"correct":"wrong"}"><strong>Your answer:</strong> ${your}</div>
+   ${ok?"":`<div class="answerline correct"><strong>Correct answer:</strong> ${good}</div>`}
+   <div class="worked"><strong>Detailed solution</strong><br><br>${q.solution}</div>`;
+   h.appendChild(c);
+ });
+}
+function clearAnswers(){
+ activeQuestions.forEach((_,i)=>document.querySelectorAll(`input[name=q${i}]`).forEach(x=>x.checked=false));
+ document.getElementById("results").style.display="none";document.getElementById("solutions").style.display="none";updateProgress();
+}
+
+document.getElementById("startBtn").onclick=startQuiz;
+document.getElementById("submitBtn").onclick=submitQuiz;
+document.getElementById("clearBtn").onclick=clearAnswers;
+document.getElementById("againBtn").onclick=startQuiz;
+document.getElementById("solutionsBtn").onclick=()=>{document.getElementById("solutions").style.display="block";document.getElementById("solutions").scrollIntoView({behavior:"smooth"})};
+
+renderUnits();
+selectTopic("prime");
+</script>
+</body>
+</html>
